@@ -25,6 +25,13 @@ frameUsuario.config(bg="Black")
 tituloSeleccion = Label(frameUsuario, text="Escoge el restaurante que quieres ver!", fg="White", bg="Black", font=("Arial", 16))
 tituloSeleccion.pack(pady=20)  # Añade un margen vertical
 
+# Frame escogerVista
+frameEscogerVista = Frame(raiz, width="600", height="1200")
+# Labels en escoger vista
+tituloEscogerVista = Label(frameEscogerVista, text="Escoge como quieres buscar tus productos:", fg="White", bg="Black", font=("Arial", 16))
+tituloEscogerVista.pack(pady=20) 
+
+
 # Frame restaurante
 frameRestaurante = Frame(raiz, width="600", height="1200")
 frameRestaurante.config(bg="White")
@@ -144,6 +151,12 @@ def agregar_producto(restauranteActual):
     if restauranteActual is None:
         print("No se ha seleccionado ningún restaurante.")
         return
+    
+def entrarEscogerVista():
+    frameUsuario.pack_forget()  # Oculta el frame restaurante
+    frameEscogerVista.pack(fill="both", expand=True)  # Muestra el frame agregar producto
+    
+
     
     # Obtener los valores de los Entry
     categoria = entryCategoria.get()
@@ -265,8 +278,14 @@ botonAñadirProducto.pack(side = TOP)
 #Botones frame usuario
 nombres_restaurantes = ["ElSaborJose", "ElSaborAna", "ElSaborAlexander", "ElSaborAlejandro", "ElSaborJudith"]
 for nombre in nombres_restaurantes:
-    boton = Button(frameUsuario, text=nombre, width=20, height=2)
+    boton = Button(frameUsuario, text=nombre, width=20, height=2, command = entrarEscogerVista)
     boton.pack(pady=10)  # Añade un margen vertical entre los botones
+    
+# Botones escoger vista
+botonVerProductoEspecifico = Button(frameEscogerVista, text="Ver producto específico", width=20, height=2)
+botonVerProductoEspecifico.pack(pady=10)
+botonVerMenu = Button(frameEscogerVista, text="Ver menú", width=20, height=2)
+botonVerMenu.pack(pady=10)
 
 # Ejecutar el bucle principal
 raiz.mainloop()
