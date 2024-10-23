@@ -3,7 +3,6 @@ from Metodos import *
 import openpyxl
 from Clases import Restaurante, Comida
 
-
 # Ventana principal
 raiz = Tk()
 raiz.geometry("1200x600")
@@ -114,40 +113,45 @@ def entrarComoUsuario():
 
 # Método para mostrar el frame de restaurante y ocultar el frame principal
 def entrarComoRestaurante():
-    ingreso=0
-    usuarios= pd.read_excel("Files/Restaurantes.xlsx")
-    for i in range(usuarios.shape[0]-1):
-        if((entryUsuario1.get()==usuarios.iloc[i+1,0]) & (entryContraseña1.get()==usuarios.iloc[i+1,1])):
+    global restauranteActual  # variable global
+    ingreso = 0
+    usuarios = pd.read_excel("Files/Restaurantes.xlsx")
+    for i in range(usuarios.shape[0] - 1):
+        if (entryUsuario1.get() == usuarios.iloc[i + 1, 0]) & (entryContraseña1.get() == usuarios.iloc[i + 1, 1]):
             frameIniciarSesionRestaurante.pack_forget()  # Oculta el frame iniciar sesion restaurante
             frameRestaurante.pack(fill="both", expand=True)  # Muestra el frame de restaurante
-            restaurante= Restaurante(usuarios.iloc[i+1,2], usuarios.iloc[i+1,3]) #Crea un restaurante
-            print("Ha ingresado como" , restaurante)
-            bienvenidaRestaurante = Label(frameRestaurante, text=f"¡Bienvenido, {restaurante.nombre}!", fg="white", bg="black")
+            restauranteActual = Restaurante(usuarios.iloc[i + 1, 2], usuarios.iloc[i + 1, 3])  # Crea un restaurante
+            print("Ha ingresado como", restauranteActual)
+            bienvenidaRestaurante = Label(frameRestaurante, text=f"¡Bienvenido, {restauranteActual.nombre}!", fg="white", bg="black")
             bienvenidaRestaurante.pack(pady=20)
-            menu= pd.read_excel(restaurante.ruta)#Recibe la ruta del archivo del restaurante y la lee
-            ingreso=1
-            for i in range(menu.shape[0]-1): #Crea las comidas y las agrega al menú del restaurante
-                comida_res= Comida(menu.iloc[i+1,0],menu.iloc[i+1,2],menu.iloc[i+1,3], menu.iloc[i+1,4], menu.iloc[i+1,1])
-                restaurante.menu.add(comida_res)
-                return restaurante
-        if(ingreso==0):
-            print("Usuario o contraseña incorrecto.")
+            menu = pd.read_excel(restauranteActual.ruta)  # Recibe la ruta del archivo del restaurante y la lee
+            ingreso = 1
+            for i in range(menu.shape[0] - 1):  # Crea las comidas y las agrega al menú del restaurante
+                comida_res = Comida(menu.iloc[i + 1, 0], menu.iloc[i + 1, 2], menu.iloc[i + 1, 3], menu.iloc[i + 1, 4], menu.iloc[i + 1, 1])
+                restauranteActual.menu.add(comida_res)
+            return restauranteActual
+    if ingreso == 0:
+        print("Usuario o contraseña incorrecto.")
             
 def entrarAgregarProducto():
     frameRestaurante.pack_forget()  # Oculta el frame restaurante
     frameAgregarProducto.pack(fill="both", expand=True)  # Muestra el frame agregar producto
     
-def agregar_producto(Restaurante):
-    # Obtener los valores de los Entry (asegúrate de que estos estén definidos)
-    categoria = entryCategoria.get()  # Asumiendo que has definido estos Entry
+def agregar_producto(restauranteActual):
+    if restauranteActual is None:
+        print("No se ha seleccionado ningún restaurante.")
+        return
+    
+    # Obtener los valores de los Entry
+    categoria = entryCategoria.get()
     nombre = entryNombre.get()
     cantidad = entryCantidad.get()
     precio = entryPrecio.get()
     
-    # Leer el menú actual
-    menu = pd.read_excel(Restaurante.ruta)
-    id = menu.shape[0] + 1
-    comidaNew = Comida(id, nombre, cantidad, precio, categoria)
+    # Leer el menú actual del restaurante
+    menu = pd.read_excel(restauranteActual.ruta)
+    id = menu.shape[0] + 1  # Generar un nuevo ID para el producto
+    comidaNew = Comida(id, nombre, cantidad, precio, categoria)  # Crear una nueva comida
     
     nueva_comida = pd.DataFrame({
         "Id": [id], 
@@ -159,13 +163,11 @@ def agregar_producto(Restaurante):
     
     # Actualizar el menú
     menuactualizado = pd.concat([menu, nueva_comida], ignore_index=True)
-    menuactualizado.to_excel(Restaurante.ruta, index=False)
-    Restaurante.menu.add(comidaNew)
+    menuactualizado.to_excel(restauranteActual.ruta, index=False)  # Guardar el archivo actualizado
     
+    restauranteActual.menu.add(comidaNew)  # Añadir la nueva comida al menú del restaurante
     print("Se ha agregado la nueva comida correctamente.")
 
-    
-            
 """ def agregar_producto(restaurante):
     # Obtener los valores de los Entry
     categoria = entryCategoria.get()
@@ -222,11 +224,12 @@ botonEntrarRestaurante = Button(frameIniciarSesionRestaurante, text="Entrar", wi
 botonEntrarRestaurante.pack(pady=20)
 
 # Botones en frame principal
-imagenUsuario = PhotoImage(file="C:/Users/Usuario/Desktop/Lab2EDD/images/Usuario.png")
+# Ruta absoluta: C:/Users/Usuario/Desktop/EDD2/images/Usuario.png
+imagenUsuario = PhotoImage(file="images/Usuario.png")
 botonUsuario = Button(framePrincipal, image=imagenUsuario, command=iniciarSesionUsuario)
 botonUsuario.pack(side="left", fill="both", expand=True)
 
-imagenRestaurante = PhotoImage(file="C:/Users/Usuario/Desktop/Lab2EDD/images/Restaurante.png")
+imagenRestaurante = PhotoImage(file="images/Restaurante.png")
 botonRestaurante = Button(framePrincipal, image=imagenRestaurante, command=iniciarSesionRestaurante)
 botonRestaurante.pack(side="right", fill="both", expand=True)
 
@@ -254,7 +257,7 @@ botonVerProductos = Button(frameRestaurante, text="Ver productos", width=20, hei
 botonVerProductos.pack(pady=10, side=TOP)
 
 # Boton frame agregar producto
-botonAñadirProducto = Button(frameAgregarProducto, text="Agregar", fg="black", bg="white", font=("Arial", 16), command=lambda: agregar_producto(Restaurante))
+botonAñadirProducto = Button(frameAgregarProducto, text="Agregar", fg="black", bg="white", font=("Arial", 16), command=lambda: agregar_producto(restauranteActual))
 botonAñadirProducto.pack(side = TOP)
 
 # Ejecutar el bucle principal
