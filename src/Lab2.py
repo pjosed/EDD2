@@ -31,6 +31,13 @@ frameEscogerVista = Frame(raiz, width="600", height="1200")
 tituloEscogerVista = Label(frameEscogerVista, text="Escoge como quieres buscar tus productos:", fg="White", bg="Black", font=("Arial", 16))
 tituloEscogerVista.pack(pady=20) 
 
+# Frame mostrarMenu
+frameMostrarMenu = Frame(raiz, width="600", height="1200")
+# Labels en mostrarMenu
+tituloMostrarMenu = Label(frameMostrarMenu, text="El menú de este restaurante es:", fg="White", bg="Black", font=("Arial", 16))
+tituloMostrarMenu.pack(pady=20) 
+labelMenu = Label(frameMostrarMenu, text="", justify="left", anchor="w")
+labelMenu.pack(pady=20, padx=20)
 
 # Frame restaurante
 frameRestaurante = Frame(raiz, width="600", height="1200")
@@ -178,21 +185,28 @@ def agregar_producto(restauranteActual):
     restauranteActual.menu.add(comidaNew)  # Añadir la nueva comida al menú del restaurante
     print("Se ha agregado la nueva comida correctamente.")
     
-def entrarEscogerVista():
-    frameUsuario.pack_forget()  # Oculta el frame restaurante
+def entrarEscogerVista(nombreRestaurante):
+    global restauranteActual
+    restauranteActual = nombreRestaurante
+    frameUsuario.pack_forget()  # Oculta el frame usuario
     frameEscogerVista.pack(fill="both", expand=True)  # Muestra el frame agregar producto
     
 def mostrar_menu(restauranteActual):
+    frameEscogerVista.pack_forget()  # Oculta el frame escogerVista
+    frameMostrarMenu.pack(fill="both", expand=True)  # Muestra el frame para mostrarMenu
+
     try:
-        menu_df = pd.read_excel(restauranteActual.ruta) 
-        
-        print(f"Menú completo de {restauranteActual.nombre}:")
+        menu_df = pd.read_excel(restauranteActual.ruta)     
+        # Crear una cadena de texto para mostrar en el Label
+        menu_texto = f"Menú completo de {restauranteActual.nombre}:\n\n"       
         for index, row in menu_df.iterrows():
-            print(f"Id: {row['Id']}, Categoría: {row['Categoria']}, Comida: {row['Comida']}, Cantidad disponible:: {row['Cantidad Disponible']}, Precio: {row['Precio']}")
+            menu_texto += f"{row['Id']}      {row['Categoria']}      {row['Comida']}      {row['Cantidad Disponible']}      {row['Precio']}\n"
+        # Mostrar el menú en el Label
+        labelMenu.config(text=menu_texto)
     
     except Exception as e:
-        print("Error al cargar el menú:", e)
-        
+        # Mostrar el error en el Label
+        labelMenu.config(text=f"Error al cargar el menú: {e}")
     
     
     # ENTRYS
@@ -222,28 +236,10 @@ def mostrar_menu(restauranteActual):
     restauranteActual.menu.add(comidaNew)  # Añadir la nueva comida al menú del restaurante
     print("Se ha agregado la nueva comida correctamente.")
 
-""" def agregar_producto(restaurante):
-    # Obtener los valores de los Entry
-    categoria = entryCategoria.get()
-    nombre = entryNombre.get()
-    cantidad = entryCantidad.get()
-    precio = entryPrecio.get()
-    
-    # Leer el menú actual
-    menu = pd.read_excel(restaurante.ruta)
-    id = menu.shape[0] + 1
-    comidaNew = Comida(id, nombre, cantidad, precio, categoria)
-    nueva_comida = pd.DataFrame({"Id": [id], "Categoria": [categoria], "Comida": [nombre], "Cantidad Disponible": [cantidad], "Precio": [precio]})
-    
-    # Actualizar el menú
-    menuactualizado = pd.concat([menu, nueva_comida], ignore_index=True)
-    menuactualizado.to_excel(restaurante.ruta, index=False)
-    restaurante.menu.add(comidaNew)
-    
-    print("Se ha agregado la nueva comida correctamente.")
 
 
- """
+
+
 # Botón Entrar en frame iniciar sesión usuario
 botonEntrarUsuario = Button(frameIniciarSesionUsuario, text="Entrar", width=20, height=2, command= entrarComoUsuario)
 botonEntrarUsuario.pack(pady=20)
@@ -314,15 +310,21 @@ botonAñadirProducto = Button(frameAgregarProducto, text="Agregar", fg="black", 
 botonAñadirProducto.pack(side = TOP)
 
 #Botones frame usuario
-nombres_restaurantes = ["ElSaborJose", "ElSaborAna", "ElSaborAlexander", "ElSaborAlejandro", "ElSaborJudith"]
-for nombre in nombres_restaurantes:
-    boton = Button(frameUsuario, text=nombre, width=20, height=2, command = entrarEscogerVista)
-    boton.pack(pady=10)  # Añade un margen vertical entre los botones
+restaurantes = [Restaurante("ElSaborJose", "Files/ElSaborJose.xlsx"),
+                Restaurante("ElSaborAna", "Files/ElSaborAna.xlsx"),
+                Restaurante("ElSaborAlexander", "Files/ElSaborAlexander.xlsx"),
+                Restaurante("ElSaborAlejandro", "Files/ElSaborAlejandro.xlsx"),
+                Restaurante("ElSaborJudith", "Files/ElSaborJudith.xlsx")]
+
+# Botones frame usuario
+for restaurante in restaurantes:
+    botonRestaurantes = Button(frameUsuario, text=restaurante.nombre, width=20, height=2, command=lambda r=restaurante: entrarEscogerVista(r))
+    botonRestaurantes.pack(pady=10)  # Añade un margen vertical entre los botone
     
 # Botones escoger vista
 botonVerProductoEspecifico = Button(frameEscogerVista, text="Ver producto específico", width=20, height=2)
 botonVerProductoEspecifico.pack(pady=10)
-botonVerMenu = Button(frameEscogerVista, text="Ver menú", width=20, height=2, command = lambda: mostrar_menu(restauranteActual))
+botonVerMenu = Button(frameEscogerVista, text="Ver menú", width=20, height=2, command=lambda: mostrar_menu(restauranteActual))
 botonVerMenu.pack(pady=10)
 
 # Ejecutar el bucle principal
