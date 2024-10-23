@@ -152,12 +152,50 @@ def agregar_producto(restauranteActual):
         print("No se ha seleccionado ningún restaurante.")
         return
     
+    # Obtener los valores de los Entry
+    categoria = entryCategoria.get()
+    nombre = entryNombre.get()
+    cantidad = entryCantidad.get()
+    precio = entryPrecio.get()
+    
+    # Leer el menú actual del restaurante
+    menu = pd.read_excel(restauranteActual.ruta)
+    id = menu.shape[0] + 1  # Generar un nuevo ID para el producto
+    comidaNew = Comida(id, nombre, cantidad, precio, categoria)  # Crear una nueva comida
+    
+    nueva_comida = pd.DataFrame({
+        "Id": [id], 
+        "Categoria": [categoria], 
+        "Comida": [nombre], 
+        "Cantidad Disponible": [cantidad], 
+        "Precio": [precio]
+    })
+    
+    # Actualizar el menú
+    menuactualizado = pd.concat([menu, nueva_comida], ignore_index=True)
+    menuactualizado.to_excel(restauranteActual.ruta, index=False)  # Guardar el archivo actualizado
+    
+    restauranteActual.menu.add(comidaNew)  # Añadir la nueva comida al menú del restaurante
+    print("Se ha agregado la nueva comida correctamente.")
+    
 def entrarEscogerVista():
     frameUsuario.pack_forget()  # Oculta el frame restaurante
     frameEscogerVista.pack(fill="both", expand=True)  # Muestra el frame agregar producto
     
-
+def mostrar_menu(restauranteActual):
+    try:
+        menu_df = pd.read_excel(restauranteActual.ruta) 
+        
+        print(f"Menú completo de {restauranteActual.nombre}:")
+        for index, row in menu_df.iterrows():
+            print(f"Id: {row['Id']}, Categoría: {row['Categoria']}, Comida: {row['Comida']}, Cantidad disponible:: {row['Cantidad Disponible']}, Precio: {row['Precio']}")
     
+    except Exception as e:
+        print("Error al cargar el menú:", e)
+        
+    
+    
+    # ENTRYS
     # Obtener los valores de los Entry
     categoria = entryCategoria.get()
     nombre = entryNombre.get()
@@ -284,7 +322,7 @@ for nombre in nombres_restaurantes:
 # Botones escoger vista
 botonVerProductoEspecifico = Button(frameEscogerVista, text="Ver producto específico", width=20, height=2)
 botonVerProductoEspecifico.pack(pady=10)
-botonVerMenu = Button(frameEscogerVista, text="Ver menú", width=20, height=2)
+botonVerMenu = Button(frameEscogerVista, text="Ver menú", width=20, height=2, command = lambda: mostrar_menu(restauranteActual))
 botonVerMenu.pack(pady=10)
 
 # Ejecutar el bucle principal
