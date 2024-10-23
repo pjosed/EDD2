@@ -21,6 +21,9 @@ titulo.pack(pady=20)  # Se añade un margen vertical
 # Frame usuario
 frameUsuario = Frame(raiz, width="600", height="1200")
 frameUsuario.config(bg="Black")
+# Título en el frame usuario
+tituloSeleccion = Label(frameUsuario, text="Escoge el restaurante que quieres ver!", fg="White", bg="Black", font=("Arial", 16))
+tituloSeleccion.pack(pady=20)  # Añade un margen vertical
 
 # Frame restaurante
 frameRestaurante = Frame(raiz, width="600", height="1200")
@@ -224,7 +227,6 @@ botonEntrarRestaurante = Button(frameIniciarSesionRestaurante, text="Entrar", wi
 botonEntrarRestaurante.pack(pady=20)
 
 # Botones en frame principal
-# Ruta absoluta: C:/Users/Usuario/Desktop/EDD2/images/Usuario.png
 imagenUsuario = PhotoImage(file="images/Usuario.png")
 botonUsuario = Button(framePrincipal, image=imagenUsuario, command=iniciarSesionUsuario)
 botonUsuario.pack(side="left", fill="both", expand=True)
@@ -259,6 +261,12 @@ botonVerProductos.pack(pady=10, side=TOP)
 # Boton frame agregar producto
 botonAñadirProducto = Button(frameAgregarProducto, text="Agregar", fg="black", bg="white", font=("Arial", 16), command=lambda: agregar_producto(restauranteActual))
 botonAñadirProducto.pack(side = TOP)
+
+#Botones frame usuario
+nombres_restaurantes = ["ElSaborJose", "ElSaborAna", "ElSaborAlexander", "ElSaborAlejandro", "ElSaborJudith"]
+for nombre in nombres_restaurantes:
+    boton = Button(frameUsuario, text=nombre, width=20, height=2)
+    boton.pack(pady=10)  # Añade un margen vertical entre los botones
 
 # Ejecutar el bucle principal
 raiz.mainloop()
