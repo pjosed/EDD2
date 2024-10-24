@@ -23,7 +23,7 @@ class Comida:
         return str(self.nombre)
 
 
-class Comprador:
+class Comprador: # Esta es la clase comprador
     def __init__(self, nombre):
         self.nombre = nombre
         self.carrito = Lista_enlazada()
