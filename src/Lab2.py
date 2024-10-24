@@ -2,6 +2,7 @@ from tkinter import *
 from Metodos import *
 import openpyxl
 from Clases import Restaurante, Comida
+from ModificarProducto import crear_frame_modificar_producto
 
 # Ventana principal
 raiz = Tk()
@@ -13,6 +14,12 @@ raiz.config(bg="Black")
 framePrincipal = Frame(raiz, width="600", height="1200")
 framePrincipal.pack(fill="both", expand=True)
 framePrincipal.config(bg="White")
+
+frame_agregar_producto = crear_frame_modificar_producto(raiz,"hola")
+
+def mostrar_frame_modificar_producto():
+    frameRestaurante.pack_forget()
+    frame_agregar_producto.pack(fill="both", expand=True)
 
 # Labels de frame principal
 titulo = Label(framePrincipal, text="Escoja si es usuario o administrador:")
@@ -287,7 +294,7 @@ botonAgregar = Button(frameRestaurante, text="Agregar", width=20, height=2, comm
 
 botonAgregar.pack(pady=10, side=TOP)
 
-botonModificar = Button(frameRestaurante, text="Modificar", width=20, height=2)
+botonModificar = Button(frameRestaurante, text="Modificar", width=20, height=2, command = mostrar_frame_modificar_producto)
 botonModificar.pack(pady=10, side=TOP)
 
 botonEliminar = Button(frameRestaurante, text="Eliminar", width=20, height=2)
@@ -296,14 +303,6 @@ botonEliminar.pack(pady=10, side=TOP)
 botonRevisarProductosVendidos = Button(frameRestaurante, text="Productos Vendidos", width=20, height=2)
 botonRevisarProductosVendidos.pack(pady=10, side=TOP)
 
-botonRevisarCantidadProductosVendida = Button(frameRestaurante, text="Cantidad Vendida", width=20, height=2)
-botonRevisarCantidadProductosVendida.pack(pady=10, side=TOP)
-
-botonRevisarGanancia = Button(frameRestaurante, text="Cantidad Vendida", width=20, height=2)
-botonRevisarGanancia.pack(pady=10, side=TOP)
-
-botonVerProductos = Button(frameRestaurante, text="Ver productos", width=20, height=2)
-botonVerProductos.pack(pady=10, side=TOP)
 
 # Boton frame agregar producto
 botonAñadirProducto = Button(frameAgregarProducto, text="Agregar", fg="black", bg="white", font=("Arial", 16), command=lambda: agregar_producto(restauranteActual))

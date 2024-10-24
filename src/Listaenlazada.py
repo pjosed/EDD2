@@ -18,3 +18,27 @@ class Lista_enlazada:
         while temporal.next:
             temporal = temporal.next
         temporal.next = Nodo(data=data)
+    def buscar(self, data):
+        """Busca un dato en la lista y devuelve su posición (desde 0)."""
+        temporal = self.head
+        posicion = 0  # Contador de la posición
+
+        while temporal:
+            if temporal.data == data:
+                return posicion  # Retorna la posición si encuentra el dato
+            temporal = temporal.next
+            posicion += 1
+
+        return -1  # Retorna -1 si el dato no está en la lista
+    def obtener_por_index(self, index):
+        """Obtiene el dato en la posición indicada por el índice."""
+        temporal = self.head
+        posicion = 0
+
+        while temporal:
+            if posicion == index:
+                return temporal.data  # Retorna el dato si encuentra la posición
+            temporal = temporal.next
+            posicion += 1
+
+        return None  # Retorna None si el índice es inválido
