@@ -1,4 +1,5 @@
 from tkinter import *
+from EliminarProducto import crear_frame_eliminar_producto
 from Metodos import *
 import openpyxl
 from Clases import Restaurante, Comida
@@ -20,6 +21,11 @@ framePrincipal.config(bg="White")
 def mostrar_frame_modificar_producto():
     frameRestaurante.pack_forget()
     frame_agregar_producto = crear_frame_modificar_producto(raiz,restauranteActual.ruta)
+    frame_agregar_producto.pack(fill="both", expand=True)
+
+def mostrar_frame_eliminar_producto():
+    frameRestaurante.pack_forget()
+    frame_agregar_producto = crear_frame_eliminar_producto(raiz,restauranteActual.ruta)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 # Labels de frame principal
@@ -299,7 +305,7 @@ botonAgregar.pack(pady=10, side=TOP)
 botonModificar = Button(frameRestaurante, text="Modificar", width=20, height=2, command=lambda:  mostrar_frame_modificar_producto())
 botonModificar.pack(pady=10, side=TOP)
 
-botonEliminar = Button(frameRestaurante, text="Eliminar", width=20, height=2)
+botonEliminar = Button(frameRestaurante, text="Eliminar", width=20, height=2, command=lambda:  mostrar_frame_eliminar_producto())
 botonEliminar.pack(pady=10, side=TOP)
 
 botonRevisarProductosVendidos = Button(frameRestaurante, text="Productos Vendidos", width=20, height=2)
