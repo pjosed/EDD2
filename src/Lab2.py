@@ -15,10 +15,11 @@ framePrincipal = Frame(raiz, width="600", height="1200")
 framePrincipal.pack(fill="both", expand=True)
 framePrincipal.config(bg="White")
 
-frame_agregar_producto = crear_frame_modificar_producto(raiz,"hola")
+
 
 def mostrar_frame_modificar_producto():
     frameRestaurante.pack_forget()
+    frame_agregar_producto = crear_frame_modificar_producto(raiz,restauranteActual.ruta)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 # Labels de frame principal
@@ -159,6 +160,7 @@ def entrarComoRestaurante():
             
 def entrarAgregarProducto():
     frameRestaurante.pack_forget()  # Oculta el frame restaurante
+    
     frameAgregarProducto.pack(fill="both", expand=True)  # Muestra el frame agregar producto
     
 def agregar_producto(restauranteActual):
@@ -294,7 +296,7 @@ botonAgregar = Button(frameRestaurante, text="Agregar", width=20, height=2, comm
 
 botonAgregar.pack(pady=10, side=TOP)
 
-botonModificar = Button(frameRestaurante, text="Modificar", width=20, height=2, command = mostrar_frame_modificar_producto)
+botonModificar = Button(frameRestaurante, text="Modificar", width=20, height=2, command=lambda:  mostrar_frame_modificar_producto())
 botonModificar.pack(pady=10, side=TOP)
 
 botonEliminar = Button(frameRestaurante, text="Eliminar", width=20, height=2)

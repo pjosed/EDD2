@@ -56,3 +56,15 @@ class Lista_enlazada:
             posicion += 1
 
         return False  # Retorna False si el índice no es válido
+    
+    def a_lista(self):
+        """Convierte la lista enlazada en una lista normal de Python."""
+        lista_normal = []
+        temporal = self.head
+
+        while temporal:
+            lista_normal.append(temporal.data)  # Agregar el dato a la lista normal
+            temporal = temporal.next
+
+        return lista_normal  # Devolver la lista normal
+
