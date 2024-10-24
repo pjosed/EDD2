@@ -3,11 +3,11 @@ from Metodos import *
 import openpyxl
 from Clases import Restaurante, Comida
 
+#Frames
 # Ventana principal
 raiz = Tk()
 raiz.geometry("1200x600")
 raiz.config(bg="Black")
-
 
 # Frame principal
 framePrincipal = Frame(raiz, width="600", height="1200")
@@ -39,6 +39,34 @@ tituloMostrarMenu.pack(pady=20)
 labelMenu = Label(frameMostrarMenu, text="", justify="left", anchor="w")
 labelMenu.pack(pady=20, padx=20)
 
+"""
+"""
+
+# Frame iniciar sesión restaurante
+frameIniciarSesionRestaurante = Frame(raiz, width="600", height="1200")
+frameIniciarSesionRestaurante.config(bg="White")
+tituloIniciarSesionRestaurante = Label(frameIniciarSesionRestaurante, text="¡Inicia sesión!")
+tituloIniciarSesionRestaurante.pack(pady=20)
+
+# Añadir los labels y entries en el frame de iniciar sesión restaurante usando pack()
+# Frame para contener las etiquetas y entradas de usuario y contraseña
+frameCampos1 = Frame(frameIniciarSesionRestaurante, bg="White")
+frameCampos1.pack(pady=20)
+
+# Etiqueta y entrada para Restaurante
+labelUsuario1 = Label(frameCampos1, text="Usuario:", bg="White")
+labelUsuario1.pack(anchor="w", pady=5)
+
+entryUsuario1 = Entry(frameCampos1)
+entryUsuario1.pack(fill="x", pady=5)
+
+# Etiqueta y entrada para Contraseña
+labelContrasena1 = Label(frameCampos1, text="Contraseña:", bg="White")
+labelContrasena1.pack(anchor="w", pady=5)
+
+entryContraseña1 = Entry(frameCampos1, show="*")
+entryContraseña1.pack(fill="x", pady=5)
+
 # Frame restaurante
 frameRestaurante = Frame(raiz, width="600", height="1200")
 frameRestaurante.config(bg="White")
@@ -62,9 +90,6 @@ entryCantidad.pack(fill="x", padx=10, pady=5)
 Label(frameAgregarProducto, text="Precio:", bg="White").pack(anchor="w", padx=10, pady=5)
 entryPrecio = Entry(frameAgregarProducto)
 entryPrecio.pack(fill="x", padx=10, pady=5)
-
-
-
 
 # Frame iniciar sesión usuario
 frameIniciarSesionUsuario = Frame(raiz, width="600", height="1200")
@@ -90,6 +115,18 @@ labelContrasena.pack(anchor="w", pady=5)
 
 entryContraseña = Entry(frameCampos, show="*")
 entryContraseña.pack(fill="x", pady=5)
+
+# Frame ver producto especifico
+frameVerProductoEspecifico = Frame(raiz, width="600", height="1200")
+# Labels en verProductoEspecifico
+TituloVerProductoEspecifico = Label(frameVerProductoEspecifico, text="Ingresa el producto que quieres buscar:", justify="left", anchor="w").pack(pady=20, padx=20)
+labelVerProductoEspecifico = Label(frameVerProductoEspecifico, text="", justify="left", anchor="w")
+labelVerProductoEspecifico.pack(pady=20, padx=20)
+# Entry para ver producto especifico
+entryVerProductoEspecifico = Entry(frameVerProductoEspecifico)
+entryVerProductoEspecifico.pack( pady=20, padx=20)
+
+
 
 # Método para abrir la ventana de iniciar sesión usuario y cerrar el frame principal
 def iniciarSesionUsuario():
@@ -207,9 +244,7 @@ def mostrar_menu(restauranteActual):
     except Exception as e:
         # Mostrar el error en el Label
         labelMenu.config(text=f"Error al cargar el menú: {e}")
-    
-    
-    # ENTRYS
+
     # Obtener los valores de los Entry
     categoria = entryCategoria.get()
     nombre = entryNombre.get()
@@ -235,6 +270,62 @@ def mostrar_menu(restauranteActual):
     
     restauranteActual.menu.add(comidaNew)  # Añadir la nueva comida al menú del restaurante
     print("Se ha agregado la nueva comida correctamente.")
+    
+def entrarVerProductoEspecifico():
+    frameEscogerVista.pack_forget()  # Oculta el frame ESCOGER VISTA
+    frameVerProductoEspecifico.pack(fill="both", expand=True)  # Muestra el frame ver producto especifico
+    
+def mostrarProductos(entryVerProductoEspecifico):
+    # Obtener el valor del Entry
+    valor_busqueda = entryVerProductoEspecifico.get().strip().lower()
+
+    # Establecer la opción para mostrar todas las filas
+    pd.set_option('display.max_rows', None)
+
+    # Lista de restaurantes con sus archivos de menú
+    restaurantes = [
+        Restaurante("ElSaborJose", "Files/ElSaborJose.xlsx"),
+        Restaurante("ElSaborAna", "Files/ElSaborAna.xlsx"),
+        Restaurante("ElSaborAlejandro", "Files/ElSaborAlejandro.xlsx"),
+        Restaurante("ElSaborAlexander", "Files/ElSaborAlexander.xlsx"),
+        Restaurante("ElSaborJudith", "Files/ElSaborJudith.xlsx")
+    ]
+
+    producto_encontrado = False  # Variable para verificar si se encontró el producto en alguno de los restaurantes
+
+    # Iniciar la cadena que contendrá la información de los productos encontrados
+    resultado_producto = f"Buscando información del producto '{valor_busqueda}' en todos los restaurantes...\n\n"
+
+    # Iterar sobre la lista de restaurantes
+    for restaurante in restaurantes:
+        try:
+            # Cargar el menú desde el archivo Excel
+            menu_df = pd.read_excel(restaurante.ruta)
+
+            # Asegurarse de que la columna 'Comida' existe en el archivo
+            if 'Comida' in menu_df.columns:
+                # Eliminar espacios y convertir a minúsculas en la columna 'Comida'
+                menu_df['Comida'] = menu_df['Comida'].str.strip().str.lower()
+
+                # Filtrar el DataFrame para encontrar el producto
+                producto_info = menu_df[menu_df['Comida'] == valor_busqueda]
+
+                if not producto_info.empty:
+                    resultado_producto += f"\nProducto encontrado en el restaurante {restaurante.nombre}:\n"
+                    for index, row in producto_info.iterrows():
+                        resultado_producto += (f"Id: {row['Id']}, Categoría: {row['Categoria']}, "
+                                               f"Comida: {row['Comida']}, Cantidad disponible: {row['Cantidad Disponible']}, "
+                                               f"Precio: {row['Precio']}\n")
+                    producto_encontrado = True
+
+        except Exception as e:
+            resultado_producto += f"Error al cargar el menú del restaurante {restaurante.nombre}: {e}\n"
+
+    # Actualizar el Label con el resultado del producto
+    labelVerProductoEspecifico.config(text=resultado_producto)
+    
+
+
 
 
 
@@ -243,31 +334,6 @@ def mostrar_menu(restauranteActual):
 # Botón Entrar en frame iniciar sesión usuario
 botonEntrarUsuario = Button(frameIniciarSesionUsuario, text="Entrar", width=20, height=2, command= entrarComoUsuario)
 botonEntrarUsuario.pack(pady=20)
-
-# Frame iniciar sesión restaurante
-frameIniciarSesionRestaurante = Frame(raiz, width="600", height="1200")
-frameIniciarSesionRestaurante.config(bg="White")
-tituloIniciarSesionRestaurante = Label(frameIniciarSesionRestaurante, text="¡Inicia sesión!")
-tituloIniciarSesionRestaurante.pack(pady=20)
-
-# Añadir los labels y entries en el frame de iniciar sesión restaurante usando pack()
-# Frame para contener las etiquetas y entradas de usuario y contraseña
-frameCampos1 = Frame(frameIniciarSesionRestaurante, bg="White")
-frameCampos1.pack(pady=20)
-
-# Etiqueta y entrada para Usuario
-labelUsuario1 = Label(frameCampos1, text="Usuario:", bg="White")
-labelUsuario1.pack(anchor="w", pady=5)
-
-entryUsuario1 = Entry(frameCampos1)
-entryUsuario1.pack(fill="x", pady=5)
-
-# Etiqueta y entrada para Contraseña
-labelContrasena1 = Label(frameCampos1, text="Contraseña:", bg="White")
-labelContrasena1.pack(anchor="w", pady=5)
-
-entryContraseña1 = Entry(frameCampos1, show="*")
-entryContraseña1.pack(fill="x", pady=5)
 
 # Botón Entrar en frame iniciar sesión restaurante
 botonEntrarRestaurante = Button(frameIniciarSesionRestaurante, text="Entrar", width=20, height=2, command = entrarComoRestaurante)
@@ -322,10 +388,14 @@ for restaurante in restaurantes:
     botonRestaurantes.pack(pady=10)  # Añade un margen vertical entre los botone
     
 # Botones escoger vista
-botonVerProductoEspecifico = Button(frameEscogerVista, text="Ver producto específico", width=20, height=2)
+botonVerProductoEspecifico = Button(frameEscogerVista, text="Ver producto en todos", width=30, height=2, command=lambda: entrarVerProductoEspecifico())
 botonVerProductoEspecifico.pack(pady=10)
 botonVerMenu = Button(frameEscogerVista, text="Ver menú", width=20, height=2, command=lambda: mostrar_menu(restauranteActual))
 botonVerMenu.pack(pady=10)
+
+#Boton frame ver producto especifico:
+botonObtenerProductoEspecifico = Button(frameVerProductoEspecifico, text="Buscar", width=75, height=2, command=lambda: mostrarProductos(entryVerProductoEspecifico))
+botonObtenerProductoEspecifico.pack(pady=10)
 
 # Ejecutar el bucle principal
 raiz.mainloop()
