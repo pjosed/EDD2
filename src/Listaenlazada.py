@@ -42,3 +42,17 @@ class Lista_enlazada:
             posicion += 1
 
         return None  # Retorna None si el índice es inválido
+
+    def editar_por_index(self, index, nuevo_valor):
+        """Edita el dato en la posición indicada por el índice."""
+        temporal = self.head
+        posicion = 0
+
+        while temporal:
+            if posicion == index:
+                temporal.data = nuevo_valor  # Cambia el dato del nodo
+                return True  # Retorna True si la edición fue exitosa
+            temporal = temporal.next
+            posicion += 1
+
+        return False  # Retorna False si el índice no es válido
