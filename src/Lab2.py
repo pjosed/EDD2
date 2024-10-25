@@ -48,7 +48,7 @@ tituloEscogerVista.pack(pady=20)
 # Frame mostrarMenu
 frameMostrarMenu = Frame(raiz, width="600", height="1200")
 # Labels en mostrarMenu
-tituloMostrarMenu = Label(frameMostrarMenu, text="El menú de este restaurante es:", fg="White", bg="Black", font=("Arial", 16))
+tituloMostrarMenu = Label(frameMostrarMenu, text="MENÚ", fg="White", bg="Black", font=("Arial", 16))
 tituloMostrarMenu.pack(pady=20) 
 labelMenu = Label(frameMostrarMenu, text="", justify="left", anchor="w")
 labelMenu.pack(pady=20, padx=20)
@@ -80,6 +80,8 @@ labelContrasena1.pack(anchor="w", pady=5)
 
 entryContraseña1 = Entry(frameCampos1, show="*")
 entryContraseña1.pack(fill="x", pady=5)
+
+bienvenidaUsuario = Label(frameUsuario, text=f"", fg="white", bg="black")
 
 # Frame restaurante
 frameRestaurante = Frame(raiz, width="600", height="1200")
@@ -168,6 +170,7 @@ def entrarComoUsuario():
             frameUsuario.pack(fill="both", expand=True)  # Muestra el frame de usuario
             comprador = Comprador(usuarios.iloc[i, 2])  # Crea el comprador
             print("Ha ingresado como", comprador)
+            global bienvenidaUsuario
             bienvenidaUsuario = Label(frameUsuario, text=f"¡Bienvenido, {comprador.nombre}!", fg="white", bg="black")
             bienvenidaUsuario.pack(pady=20)  # Añade el Label al frame de usuario
 
@@ -339,6 +342,32 @@ def mostrarProductos(entryVerProductoEspecifico):
     # Actualizar el Label con el resultado del producto
     labelVerProductoEspecifico.config(text=resultado_producto)
     
+def retrocederAFramePrincipal():
+    frameIniciarSesionUsuario.pack_forget()  # Oculta el frame iniciar sesioon
+    framePrincipal.pack(fill="both", expand=True)  # Muestra el frame principal
+    
+def retrocederAIniciarSesion():
+    frameUsuario.pack_forget()  # Oculta el frame usuario
+    frameIniciarSesionUsuario.pack(fill="both", expand=True)  # Muestra el iniciar sesion de usuario
+    global bienvenidaUsuario
+    if bienvenidaUsuario is not None:
+        bienvenidaUsuario.destroy()  # Destruir el Label existente
+        bienvenidaUsuario = None  # Reiniciar a None
+        
+def retrocederAUsuario():
+    frameEscogerVista.pack_forget()  # Oculta el frame escoger vista
+    frameUsuario.pack(fill="both", expand=True)  # Muestra el frame usuario
+    
+def retrocederAEscogerVistaMenu():
+    frameMostrarMenu.pack_forget()  # Oculta el frame mostrar menu
+    frameEscogerVista.pack(fill="both", expand=True)  # Muestra el frame escogerVista
+    
+def retrocederAEscogerVistaProducto():
+    frameVerProductoEspecifico.pack_forget()  # Oculta el frame escoger vista
+    frameEscogerVista.pack(fill="both", expand=True)  # Muestra el frame usuario
+    
+    
+    
 
 
 
@@ -403,6 +432,30 @@ botonVerMenu.pack(pady=10)
 #Boton frame ver producto especifico:
 botonObtenerProductoEspecifico = Button(frameVerProductoEspecifico, text="Buscar", width=75, height=2, command=lambda: mostrarProductos(entryVerProductoEspecifico))
 botonObtenerProductoEspecifico.pack(pady=10)
+
+
+#Botones de retroceso
+# Retroceder de iniciar sesion a frame principal
+botonRetrocederAFramePrincipal = Button(frameIniciarSesionUsuario, text="Volver", command=lambda: retrocederAFramePrincipal())
+botonRetrocederAFramePrincipal.place(x=0, y=0) 
+
+# Retroceder de frameUsuario a iniciarSesion
+botonRetrocederAIniciarSesion = Button(frameUsuario, text="Volver", command=lambda: retrocederAIniciarSesion())
+botonRetrocederAIniciarSesion.place(x=0, y=0) 
+
+# Retroceder de escogerVista a usuario
+botonRetrocederAUsuario = Button(frameEscogerVista, text="Volver", command=lambda: retrocederAUsuario())
+botonRetrocederAUsuario.place(x=0, y=0) 
+
+# Retroceder de verMenu a EscogerVista
+botonRetrocederAEscogerVistaMenu = Button(frameMostrarMenu, text="Volver", command=lambda: retrocederAEscogerVistaMenu())
+botonRetrocederAEscogerVistaMenu.place(x=0, y=0) 
+
+# Retroceder de verProductoEspecifico a EscogerVista
+botonRetrocederAEscogerVistaProducto = Button(frameVerProductoEspecifico, text="Volver", command=lambda: retrocederAEscogerVistaProducto())
+botonRetrocederAEscogerVistaProducto.place(x=0, y=0) 
+
+
 
 # Ejecutar el bucle principal
 raiz.mainloop()
