@@ -2,6 +2,7 @@ from tkinter import *
 from Metodos import *
 import openpyxl
 from Clases import Restaurante, Comida
+from tkinter import messagebox
 
 # Ventana principal
 raiz = Tk()
@@ -89,3 +90,4 @@ frameCampos.pack(pady=20)
 # Etiqueta y entrada para Usuario
 labelUsuario = Label(frameCampos, text="Usuario:", bg="White")
 labelUsuario.pack(anchor="w", pady=5)
+

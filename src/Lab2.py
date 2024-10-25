@@ -6,7 +6,6 @@ from Clases import Restaurante, Comida
 from ModificarProducto import crear_frame_modificar_producto
 from tkinter import messagebox
 import tkinter as tk
-from MostrarVentas import crear_frame_ventas_producto
 #Frames
 # Ventana principal
 raiz = Tk()
@@ -22,17 +21,12 @@ framePrincipal.config(bg="White")
 
 def mostrar_frame_modificar_producto():
     frameRestaurante.pack_forget()
-    frame_agregar_producto = crear_frame_modificar_producto(raiz,restauranteActual.ruta,frameRestaurante)
+    frame_agregar_producto = crear_frame_modificar_producto(raiz,restauranteActual.ruta)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 def mostrar_frame_eliminar_producto():
     frameRestaurante.pack_forget()
-    frame_agregar_producto = crear_frame_eliminar_producto(raiz,restauranteActual.ruta,frameRestaurante)
-    frame_agregar_producto.pack(fill="both", expand=True)
-
-def mostrar_frame_ventas_producto():
-    frameRestaurante.pack_forget()
-    frame_agregar_producto = crear_frame_ventas_producto(raiz,restauranteActual.nombre,frameRestaurante)
+    frame_agregar_producto = crear_frame_eliminar_producto(raiz,restauranteActual.ruta)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 # Labels de frame principal
@@ -54,11 +48,16 @@ tituloEscogerVista.pack(pady=20)
 
 # Frame mostrarMenu
 frameMostrarMenu = Frame(raiz, width="600", height="1200")
+
 # Labels en mostrarMenu
 tituloMostrarMenu = Label(frameMostrarMenu, text="MENÚ", fg="White", bg="Black", font=("Arial", 16))
 tituloMostrarMenu.pack(pady=20) 
 labelMenu = Label(frameMostrarMenu, text="", justify="left", anchor="w")
 labelMenu.pack(pady=20, padx=20)
+labelMenuCarrito = Label(frameMostrarMenu, text="Introduzca el ID del producto a agregar al carrito", fg="White", bg="Black", font=("Arial", 16))
+labelMenuCarrito.pack(padx=20,pady=20)
+entryCarrito1 = Entry(frameMostrarMenu)
+entryCarrito1.pack(pady=20,padx=20)
 
 """
 """
@@ -114,20 +113,6 @@ Label(frameAgregarProducto, text="Precio:", bg="White").pack(anchor="w", padx=10
 entryPrecio = Entry(frameAgregarProducto)
 entryPrecio.pack(fill="x", padx=10, pady=5)
 
-def volver_to_opciones_restaurante():
-    frameAgregarProducto.pack_forget()
-    frameRestaurante.pack(fill="both", expand=True)
-# Botón 'Atrás' usando place()
-boton_atras = tk.Button(frameAgregarProducto, text="Atrás",command=volver_to_opciones_restaurante)
-boton_atras.place(relx=0.95, rely=0.025, anchor="ne")  # Posicionar en la esquina superior derecha
-
-def volver_to_raiz():
-    frameRestaurante.pack_forget()
-    framePrincipal.pack(fill="both", expand=True)
-# Botón 'Atrás' usando place()
-boton_atras = tk.Button(frameRestaurante, text="Atrás",command=volver_to_raiz)
-boton_atras.place(relx=0.95, rely=0.025, anchor="ne")  # Posicionar en la esquina superior derecha
-
 # Frame iniciar sesión usuario
 frameIniciarSesionUsuario = Frame(raiz, width="600", height="1200")
 frameIniciarSesionUsuario.config(bg="White")
@@ -162,6 +147,28 @@ labelVerProductoEspecifico.pack(pady=20, padx=20)
 # Entry para ver producto especifico
 entryVerProductoEspecifico = Entry(frameVerProductoEspecifico)
 entryVerProductoEspecifico.pack( pady=20, padx=20)
+
+# Frame carrito de compras (nuevo)
+frameCarritoCompras = Frame(raiz, width="600", height="1200")
+frameCarritoCompras.config(bg="White")
+
+tituloCarritoCompras = Label(frameCarritoCompras, text="Carrito de Compras", fg="black", bg="white", font=("Arial", 16))
+tituloCarritoCompras.pack(pady=20)
+
+# Área para mostrar el carrito
+textCarrito = Text(frameCarritoCompras, height=15, width=60)
+textCarrito.pack(pady=10)
+textCarrito.config(state=DISABLED)
+
+# Entrys para interactuar con el carrito
+Label(frameCarritoCompras, text="Nombre del Producto:", bg="White").pack(anchor="w", padx=10, pady=5)
+entryNombreProductoCarrito = Entry(frameCarritoCompras)
+entryNombreProductoCarrito.pack(fill="x", padx=10, pady=5)
+
+Label(frameCarritoCompras, text="Cantidad:", bg="White").pack(anchor="w", padx=10, pady=5)
+entryCantidadProductoCarrito = Entry(frameCarritoCompras)
+entryCantidadProductoCarrito.pack(fill="x", padx=10, pady=5)
+
 
 
 
@@ -229,7 +236,6 @@ def entrarAgregarProducto():
     frameRestaurante.pack_forget()  # Oculta el frame restaurante
     
     frameAgregarProducto.pack(fill="both", expand=True)  # Muestra el frame agregar producto
-    
     
 def agregar_producto(restauranteActual):
     if restauranteActual is None:
@@ -320,7 +326,7 @@ def mostrarProductos(entryVerProductoEspecifico):
     valor_busqueda = entryVerProductoEspecifico.get().strip().lower()
 
     # Establecer la opción para mostrar todas las filas
-    pd.set_option('display.max_rows', None)
+    
 
     # Lista de restaurantes con sus archivos de menú
     restaurantes = [
@@ -387,7 +393,35 @@ def retrocederAEscogerVistaMenu():
 def retrocederAEscogerVistaProducto():
     frameVerProductoEspecifico.pack_forget()  # Oculta el frame escoger vista
     frameEscogerVista.pack(fill="both", expand=True)  # Muestra el frame usuario
+
+def entrarFrameCarrito():
+  nombre = entryNombreProductoCarrito.get()
+  frameMostrarMenu.pack_forget()
+   
+  frameCarritoCompras.pack(fill="both", expand=True)  # Muestra el frame usuario
+
+def regresarEscogerVista():
+   frameCarritoCompras.pack_forget()
+   
+   frameEscogerVista.pack(fill="both", expand=True)  # Muestra el frame usuario
+
+def agregarAlCarrito(valor):
+    valor = entryCarrito1.get()
+    carrito = Comprador()
+    global restauranteActual
+    carrito.agregar_al_carrito(restauranteActual, valor, cantidad) 
+
+
     
+
+
+
+
+# Funciones para manejar el carrito
+
+
+
+
     
     
 
@@ -425,7 +459,7 @@ botonModificar.pack(pady=10, side=TOP)
 botonEliminar = Button(frameRestaurante, text="Eliminar", width=20, height=2, command=lambda:  mostrar_frame_eliminar_producto())
 botonEliminar.pack(pady=10, side=TOP)
 
-botonRevisarProductosVendidos = Button(frameRestaurante, text="Productos Vendidos", width=20, height=2, command=lambda:  mostrar_frame_ventas_producto())
+botonRevisarProductosVendidos = Button(frameRestaurante, text="Productos Vendidos", width=20, height=2)
 botonRevisarProductosVendidos.pack(pady=10, side=TOP)
 
 
@@ -477,84 +511,27 @@ botonRetrocederAEscogerVistaMenu.place(x=0, y=0)
 botonRetrocederAEscogerVistaProducto = Button(frameVerProductoEspecifico, text="Volver", command=lambda: retrocederAEscogerVistaProducto())
 botonRetrocederAEscogerVistaProducto.place(x=0, y=0) 
 
-# Frame comprador/carrito
-def interfaz_comprador():
-    raiz = Tk()
-    raiz.geometry("1200x600")
-    raiz.config(bg="Black")
+# Botones para el Frame del Carrito
+botonAgregarCarrito = Button(frameMostrarMenu, text="Agregar al Carrito", command=lambda: entrarFrameCarrito())
+botonAgregarCarrito.pack(padx=40, pady=20)
+
+botonEliminarCarrito = Button(frameMostrarMenu, text="Eliminar del Carrito")
+botonEliminarCarrito.pack(pady=5)
+
+botonPagar = Button(frameCarritoCompras, text="Pagar")
+botonPagar.pack(pady=5)
+
+botonVolver = Button(frameCarritoCompras, text="Volver", command=lambda: regresarEscogerVista())
+botonVolver.pack(pady=5)
+
+
+
+
+
     
-    comprador = Comprador("Juan")  # Ejemplo de comprador
-    restaurante = Restaurante("Restaurante", "files/Restaurantes.xlsx")  # Ejemplo de restaurante cargado
 
-    # Frames existentes más el nuevo Frame del Carrito
-    framePrincipal = Frame(raiz, width="600", height="1200")
-    framePrincipal.pack(fill="both", expand=True)
-    framePrincipal.config(bg="White")
 
-    # Frame carrito de compras (nuevo)
-    frameCarritoCompras = Frame(raiz, width="600", height="1200")
-    frameCarritoCompras.config(bg="White")
-
-    tituloCarritoCompras = Label(frameCarritoCompras, text="Carrito de Compras", fg="black", bg="white", font=("Arial", 16))
-    tituloCarritoCompras.pack(pady=20)
-
-    # Área para mostrar el carrito
-    textCarrito = Text(frameCarritoCompras, height=15, width=60)
-    textCarrito.pack(pady=10)
-    textCarrito.config(state=DISABLED)
-
-    # Entrys para interactuar con el carrito
-    Label(frameCarritoCompras, text="Nombre del Producto:", bg="White").pack(anchor="w", padx=10, pady=5)
-    entryNombreProductoCarrito = Entry(frameCarritoCompras)
-    entryNombreProductoCarrito.pack(fill="x", padx=10, pady=5)
-
-    Label(frameCarritoCompras, text="Cantidad:", bg="White").pack(anchor="w", padx=10, pady=5)
-    entryCantidadProductoCarrito = Entry(frameCarritoCompras)
-    entryCantidadProductoCarrito.pack(fill="x", padx=10, pady=5)
-
-    # Funciones para manejar el carrito
-    def agregar_al_carrito():
-        nombre = entryNombreProductoCarrito.get()
-        try:
-            cantidad = int(entryCantidadProductoCarrito.get())
-            mensaje = comprador.agregar_al_carrito(restaurante, nombre, cantidad)
-            messagebox.showinfo("Agregar al Carrito", mensaje)
-            actualizar_carrito()
-        except ValueError:
-            messagebox.showerror("Error", "La cantidad debe ser un número entero.")
-
-    def eliminar_del_carrito():
-        nombre = entryNombreProductoCarrito.get()
-        mensaje = comprador.eliminar_del_carrito(nombre)
-        messagebox.showinfo("Eliminar del Carrito", mensaje)
-        actualizar_carrito()
-
-    def actualizar_carrito():
-        carrito_info = comprador.mostrar_carrito()
-        textCarrito.config(state=NORMAL)
-        textCarrito.delete(1.0, END)
-        textCarrito.insert(END, carrito_info)
-        textCarrito.config(state=DISABLED)
-
-    def pagar():
-        mensaje = comprador.pagar()
-        messagebox.showinfo("Pagar", mensaje)
-        actualizar_carrito()
-
-    # Botones para el Frame del Carrito
-    botonAgregarCarrito = Button(frameCarritoCompras, text="Agregar al Carrito", command=agregar_al_carrito)
-    botonAgregarCarrito.pack(pady=5)
-
-    botonEliminarCarrito = Button(frameCarritoCompras, text="Eliminar del Carrito", command=eliminar_del_carrito)
-    botonEliminarCarrito.pack(pady=5)
-
-    botonPagar = Button(frameCarritoCompras, text="Pagar", command=pagar)
-    botonPagar.pack(pady=5)
-
-    botonVolver = Button(frameCarritoCompras, text="Volver", command=lambda: frameCarritoCompras.pack_forget())
-    botonVolver.pack(pady=5)
-
-    interfaz_comprador()
+    
 
 
 
