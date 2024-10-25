@@ -43,10 +43,13 @@ def agregar_tabla(frame,archivo_excel ):
     frame.grid_columnconfigure(0, weight=1)  # Permitir expansión horizontal
 
 
-def agregar_tabla_ventas(frame,archivo_excel ):
+def agregar_tabla_ventas(frame,name ):
         # Leer el archivo Excel
     
-    df = pd.read_excel(archivo_excel)
+    df = pd.read_excel("Files/Ventas.xlsx")
+    df = df[df["Restaurante"] == name]
+    df = df.drop("Restaurante", axis=1)
+    df = df.groupby('Comida')[['Cantidad Vendida', 'Precio Total']].sum().reset_index()
 
     # Definir las columnas para la tabla con base en el archivo Excel
     columnas = list(df.columns)  # Extraer los nombres de las columnas del DataFrame
@@ -54,8 +57,10 @@ def agregar_tabla_ventas(frame,archivo_excel ):
     # Crear el widget Treeview para la tabla
     tabla = ttk.Treeview(frame, columns=columnas, show="headings")
 
+
     # Definir los encabezados y columnas
     for col in columnas:
+        
         tabla.heading(col, text=col)  # Título de la columna
         tabla.column(col, anchor=tk.CENTER, stretch=True)  # Centrar contenido
 
