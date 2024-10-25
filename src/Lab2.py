@@ -16,17 +16,18 @@ framePrincipal = Frame(raiz, width="600", height="1200")
 framePrincipal.pack(fill="both", expand=True)
 framePrincipal.config(bg="White")
 
-
-
 def mostrar_frame_modificar_producto():
     frameRestaurante.pack_forget()
-    frame_agregar_producto = crear_frame_modificar_producto(raiz,restauranteActual.ruta)
+    frame_agregar_producto= crear_frame_modificar_producto(raiz,restauranteActual.ruta)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 def mostrar_frame_eliminar_producto():
     frameRestaurante.pack_forget()
     frame_agregar_producto = crear_frame_eliminar_producto(raiz,restauranteActual.ruta)
     frame_agregar_producto.pack(fill="both", expand=True)
+def regresaragregarproducto():
+    frameAgregarProducto.pack_forget()  # Oculta el frame de agregar producto
+    frameRestaurante.pack(fill="both", expand=True)
 
 # Labels de frame principal
 titulo = Label(framePrincipal, text="Escoja si es usuario o administrador:")
@@ -106,6 +107,9 @@ entryCantidad.pack(fill="x", padx=10, pady=5)
 Label(frameAgregarProducto, text="Precio:", bg="White").pack(anchor="w", padx=10, pady=5)
 entryPrecio = Entry(frameAgregarProducto)
 entryPrecio.pack(fill="x", padx=10, pady=5)
+# Botón regresar
+botonRegresar = Button(frameAgregarProducto, text="Regresar", command=regresaragregarproducto)
+botonRegresar.place(x=10, y=10)
 
 # Frame iniciar sesión usuario
 frameIniciarSesionUsuario = Frame(raiz, width="600", height="1200")
