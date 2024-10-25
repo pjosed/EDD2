@@ -5,7 +5,7 @@ from LeerRestaurante import LeerRestaurante, guardar_datos_en_excel
 from Listaenlazada import Lista_enlazada
 from PlotRestaurante import agregar_tabla
 
-def crear_frame_modificar_producto(parent, archivo_excel):
+def crear_frame_modificar_producto(parent, archivo_excel, frame_anterior):
     # Crear el frame principal
     frame_modificar_producto = tk.Frame(parent)
     frame_modificar_producto.pack(fill=tk.BOTH, expand=True)
@@ -83,7 +83,16 @@ def crear_frame_modificar_producto(parent, archivo_excel):
     boton.pack(pady=10)
 
 
+    def volver():
+        frame_modificar_producto.pack_forget()
+        frame_anterior.pack(fill="both", expand=True)
+        
 
+    
+
+    # Botón 'Atrás' usando place()
+    boton_atras = tk.Button(frame_modificar_producto, text="Atrás",command=volver)
+    boton_atras.place(relx=0.95, rely=0.025, anchor="ne")  # Posicionar en la esquina superior derecha
  
 
 

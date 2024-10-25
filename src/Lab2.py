@@ -22,17 +22,17 @@ framePrincipal.config(bg="White")
 
 def mostrar_frame_modificar_producto():
     frameRestaurante.pack_forget()
-    frame_agregar_producto = crear_frame_modificar_producto(raiz,restauranteActual.ruta)
+    frame_agregar_producto = crear_frame_modificar_producto(raiz,restauranteActual.ruta,frameRestaurante)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 def mostrar_frame_eliminar_producto():
     frameRestaurante.pack_forget()
-    frame_agregar_producto = crear_frame_eliminar_producto(raiz,restauranteActual.ruta)
+    frame_agregar_producto = crear_frame_eliminar_producto(raiz,restauranteActual.ruta,frameRestaurante)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 def mostrar_frame_ventas_producto():
     frameRestaurante.pack_forget()
-    frame_agregar_producto = crear_frame_ventas_producto(raiz,restauranteActual.nombre)
+    frame_agregar_producto = crear_frame_ventas_producto(raiz,restauranteActual.nombre,frameRestaurante)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 # Labels de frame principal
@@ -113,6 +113,20 @@ entryCantidad.pack(fill="x", padx=10, pady=5)
 Label(frameAgregarProducto, text="Precio:", bg="White").pack(anchor="w", padx=10, pady=5)
 entryPrecio = Entry(frameAgregarProducto)
 entryPrecio.pack(fill="x", padx=10, pady=5)
+
+def volver_to_opciones_restaurante():
+    frameAgregarProducto.pack_forget()
+    frameRestaurante.pack(fill="both", expand=True)
+# Botón 'Atrás' usando place()
+boton_atras = tk.Button(frameAgregarProducto, text="Atrás",command=volver_to_opciones_restaurante)
+boton_atras.place(relx=0.95, rely=0.025, anchor="ne")  # Posicionar en la esquina superior derecha
+
+def volver_to_raiz():
+    frameRestaurante.pack_forget()
+    framePrincipal.pack(fill="both", expand=True)
+# Botón 'Atrás' usando place()
+boton_atras = tk.Button(frameRestaurante, text="Atrás",command=volver_to_raiz)
+boton_atras.place(relx=0.95, rely=0.025, anchor="ne")  # Posicionar en la esquina superior derecha
 
 # Frame iniciar sesión usuario
 frameIniciarSesionUsuario = Frame(raiz, width="600", height="1200")
@@ -215,6 +229,7 @@ def entrarAgregarProducto():
     frameRestaurante.pack_forget()  # Oculta el frame restaurante
     
     frameAgregarProducto.pack(fill="both", expand=True)  # Muestra el frame agregar producto
+    
     
 def agregar_producto(restauranteActual):
     if restauranteActual is None:
