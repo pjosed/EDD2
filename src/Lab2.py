@@ -6,6 +6,7 @@ from Clases import Restaurante, Comida
 from ModificarProducto import crear_frame_modificar_producto
 from tkinter import messagebox
 import tkinter as tk
+from MostrarVentas import crear_frame_ventas_producto
 #Frames
 # Ventana principal
 raiz = Tk()
@@ -27,6 +28,11 @@ def mostrar_frame_modificar_producto():
 def mostrar_frame_eliminar_producto():
     frameRestaurante.pack_forget()
     frame_agregar_producto = crear_frame_eliminar_producto(raiz,restauranteActual.ruta)
+    frame_agregar_producto.pack(fill="both", expand=True)
+
+def mostrar_frame_ventas_producto():
+    frameRestaurante.pack_forget()
+    frame_agregar_producto = crear_frame_ventas_producto(raiz,restauranteActual.nombre)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 # Labels de frame principal
@@ -404,7 +410,7 @@ botonModificar.pack(pady=10, side=TOP)
 botonEliminar = Button(frameRestaurante, text="Eliminar", width=20, height=2, command=lambda:  mostrar_frame_eliminar_producto())
 botonEliminar.pack(pady=10, side=TOP)
 
-botonRevisarProductosVendidos = Button(frameRestaurante, text="Productos Vendidos", width=20, height=2)
+botonRevisarProductosVendidos = Button(frameRestaurante, text="Productos Vendidos", width=20, height=2, command=lambda:  mostrar_frame_ventas_producto())
 botonRevisarProductosVendidos.pack(pady=10, side=TOP)
 
 
