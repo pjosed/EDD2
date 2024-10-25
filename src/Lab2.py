@@ -4,7 +4,8 @@ from Metodos import *
 import openpyxl
 from Clases import Restaurante, Comida
 from ModificarProducto import crear_frame_modificar_producto
-
+from tkinter import messagebox
+import tkinter as tk
 #Frames
 # Ventana principal
 raiz = Tk()
@@ -16,18 +17,17 @@ framePrincipal = Frame(raiz, width="600", height="1200")
 framePrincipal.pack(fill="both", expand=True)
 framePrincipal.config(bg="White")
 
+
+
 def mostrar_frame_modificar_producto():
     frameRestaurante.pack_forget()
-    frame_agregar_producto= crear_frame_modificar_producto(raiz,restauranteActual.ruta)
+    frame_agregar_producto = crear_frame_modificar_producto(raiz,restauranteActual.ruta)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 def mostrar_frame_eliminar_producto():
     frameRestaurante.pack_forget()
     frame_agregar_producto = crear_frame_eliminar_producto(raiz,restauranteActual.ruta)
     frame_agregar_producto.pack(fill="both", expand=True)
-def regresaragregarproducto():
-    frameAgregarProducto.pack_forget()  # Oculta el frame de agregar producto
-    frameRestaurante.pack(fill="both", expand=True)
 
 # Labels de frame principal
 titulo = Label(framePrincipal, text="Escoja si es usuario o administrador:")
@@ -107,9 +107,6 @@ entryCantidad.pack(fill="x", padx=10, pady=5)
 Label(frameAgregarProducto, text="Precio:", bg="White").pack(anchor="w", padx=10, pady=5)
 entryPrecio = Entry(frameAgregarProducto)
 entryPrecio.pack(fill="x", padx=10, pady=5)
-# Botón regresar
-botonRegresar = Button(frameAgregarProducto, text="Regresar", command=regresaragregarproducto)
-botonRegresar.place(x=10, y=10)
 
 # Frame iniciar sesión usuario
 frameIniciarSesionUsuario = Frame(raiz, width="600", height="1200")
@@ -145,9 +142,6 @@ labelVerProductoEspecifico.pack(pady=20, padx=20)
 # Entry para ver producto especifico
 entryVerProductoEspecifico = Entry(frameVerProductoEspecifico)
 entryVerProductoEspecifico.pack( pady=20, padx=20)
-
-#Frame del carrito
-frameCarrito = Frame(raiz, width="600", height="1200")
 
 
 
@@ -447,7 +441,7 @@ botonRetrocederAFramePrincipal = Button(frameIniciarSesionUsuario, text="Volver"
 botonRetrocederAFramePrincipal.place(x=0, y=0) 
 
 # Retroceder de frameUsuario a iniciarSesion
-botonRetrocederAIniciarSesion = Button(frameUsuario, text="Cerrar sesion", command=lambda: retrocederAIniciarSesion())
+botonRetrocederAIniciarSesion = Button(frameUsuario, text="Volver", command=lambda: retrocederAIniciarSesion())
 botonRetrocederAIniciarSesion.place(x=0, y=0) 
 
 # Retroceder de escogerVista a usuario
@@ -461,6 +455,85 @@ botonRetrocederAEscogerVistaMenu.place(x=0, y=0)
 # Retroceder de verProductoEspecifico a EscogerVista
 botonRetrocederAEscogerVistaProducto = Button(frameVerProductoEspecifico, text="Volver", command=lambda: retrocederAEscogerVistaProducto())
 botonRetrocederAEscogerVistaProducto.place(x=0, y=0) 
+
+# Frame comprador/carrito
+def interfaz_comprador():
+    raiz = Tk()
+    raiz.geometry("1200x600")
+    raiz.config(bg="Black")
+    
+    comprador = Comprador("Juan")  # Ejemplo de comprador
+    restaurante = Restaurante("Restaurante", "files/Restaurantes.xlsx")  # Ejemplo de restaurante cargado
+
+    # Frames existentes más el nuevo Frame del Carrito
+    framePrincipal = Frame(raiz, width="600", height="1200")
+    framePrincipal.pack(fill="both", expand=True)
+    framePrincipal.config(bg="White")
+
+    # Frame carrito de compras (nuevo)
+    frameCarritoCompras = Frame(raiz, width="600", height="1200")
+    frameCarritoCompras.config(bg="White")
+
+    tituloCarritoCompras = Label(frameCarritoCompras, text="Carrito de Compras", fg="black", bg="white", font=("Arial", 16))
+    tituloCarritoCompras.pack(pady=20)
+
+    # Área para mostrar el carrito
+    textCarrito = Text(frameCarritoCompras, height=15, width=60)
+    textCarrito.pack(pady=10)
+    textCarrito.config(state=DISABLED)
+
+    # Entrys para interactuar con el carrito
+    Label(frameCarritoCompras, text="Nombre del Producto:", bg="White").pack(anchor="w", padx=10, pady=5)
+    entryNombreProductoCarrito = Entry(frameCarritoCompras)
+    entryNombreProductoCarrito.pack(fill="x", padx=10, pady=5)
+
+    Label(frameCarritoCompras, text="Cantidad:", bg="White").pack(anchor="w", padx=10, pady=5)
+    entryCantidadProductoCarrito = Entry(frameCarritoCompras)
+    entryCantidadProductoCarrito.pack(fill="x", padx=10, pady=5)
+
+    # Funciones para manejar el carrito
+    def agregar_al_carrito():
+        nombre = entryNombreProductoCarrito.get()
+        try:
+            cantidad = int(entryCantidadProductoCarrito.get())
+            mensaje = comprador.agregar_al_carrito(restaurante, nombre, cantidad)
+            messagebox.showinfo("Agregar al Carrito", mensaje)
+            actualizar_carrito()
+        except ValueError:
+            messagebox.showerror("Error", "La cantidad debe ser un número entero.")
+
+    def eliminar_del_carrito():
+        nombre = entryNombreProductoCarrito.get()
+        mensaje = comprador.eliminar_del_carrito(nombre)
+        messagebox.showinfo("Eliminar del Carrito", mensaje)
+        actualizar_carrito()
+
+    def actualizar_carrito():
+        carrito_info = comprador.mostrar_carrito()
+        textCarrito.config(state=NORMAL)
+        textCarrito.delete(1.0, END)
+        textCarrito.insert(END, carrito_info)
+        textCarrito.config(state=DISABLED)
+
+    def pagar():
+        mensaje = comprador.pagar()
+        messagebox.showinfo("Pagar", mensaje)
+        actualizar_carrito()
+
+    # Botones para el Frame del Carrito
+    botonAgregarCarrito = Button(frameCarritoCompras, text="Agregar al Carrito", command=agregar_al_carrito)
+    botonAgregarCarrito.pack(pady=5)
+
+    botonEliminarCarrito = Button(frameCarritoCompras, text="Eliminar del Carrito", command=eliminar_del_carrito)
+    botonEliminarCarrito.pack(pady=5)
+
+    botonPagar = Button(frameCarritoCompras, text="Pagar", command=pagar)
+    botonPagar.pack(pady=5)
+
+    botonVolver = Button(frameCarritoCompras, text="Volver", command=lambda: frameCarritoCompras.pack_forget())
+    botonVolver.pack(pady=5)
+
+    interfaz_comprador()
 
 
 
