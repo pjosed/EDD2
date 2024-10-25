@@ -142,6 +142,9 @@ labelVerProductoEspecifico.pack(pady=20, padx=20)
 entryVerProductoEspecifico = Entry(frameVerProductoEspecifico)
 entryVerProductoEspecifico.pack( pady=20, padx=20)
 
+#Frame del carrito
+frameCarrito = Frame(raiz, width="600", height="1200")
+
 
 
 # Método para abrir la ventana de iniciar sesión usuario y cerrar el frame principal
@@ -440,7 +443,7 @@ botonRetrocederAFramePrincipal = Button(frameIniciarSesionUsuario, text="Volver"
 botonRetrocederAFramePrincipal.place(x=0, y=0) 
 
 # Retroceder de frameUsuario a iniciarSesion
-botonRetrocederAIniciarSesion = Button(frameUsuario, text="Volver", command=lambda: retrocederAIniciarSesion())
+botonRetrocederAIniciarSesion = Button(frameUsuario, text="Cerrar sesion", command=lambda: retrocederAIniciarSesion())
 botonRetrocederAIniciarSesion.place(x=0, y=0) 
 
 # Retroceder de escogerVista a usuario
