@@ -1,5 +1,6 @@
 from Listaenlazada import Lista_enlazada
-
+import openpyxl
+from openpyxl import Workbook
 
 class Restaurante:
     def __init__(self, nombre, ruta):
@@ -77,7 +78,31 @@ class Comprador: # Esta es la clase comprador
 
         # Vaciar el carrito después del pago
         self.carrito.clear()
+        
+        # Agregar el pago al archivo Excel
+        self.agregar_a_excel(total)
+        
         return f"El total a pagar es: ${total:.2f}. Pago realizado exitosamente."
+
+    def agregar_a_excel(self, total):
+        # Cargar el archivo de Excel o crear uno nuevo
+        try:
+            wb = openpyxl.load_workbook('Ventas.xlsx')
+            hoja = wb.active
+        except FileNotFoundError:
+            wb = Workbook()
+            hoja = wb.active
+            hoja.append(["Fecha", "Total"])  # Encabezados
+
+        # Agregar la nueva venta
+        from datetime import datetime
+        fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        hoja.append([fecha, total])
+
+        # Guardar el archivo
+        wb.save('Ventas.xlsx')
 
     def __str__(self):
         return str(self.nombre)
+    
+    

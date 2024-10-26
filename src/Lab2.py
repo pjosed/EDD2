@@ -6,6 +6,8 @@ from Clases import Restaurante, Comida
 from ModificarProducto import crear_frame_modificar_producto
 from tkinter import messagebox
 import tkinter as tk
+
+from MostrarVentas import crear_frame_ventas_producto
 #Frames
 # Ventana principal
 raiz = Tk()
@@ -18,15 +20,19 @@ framePrincipal.pack(fill="both", expand=True)
 framePrincipal.config(bg="White")
 
 
-
 def mostrar_frame_modificar_producto():
     frameRestaurante.pack_forget()
-    frame_agregar_producto = crear_frame_modificar_producto(raiz,restauranteActual.ruta)
+    frame_agregar_producto = crear_frame_modificar_producto(raiz,restauranteActual.ruta,frameRestaurante)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 def mostrar_frame_eliminar_producto():
     frameRestaurante.pack_forget()
-    frame_agregar_producto = crear_frame_eliminar_producto(raiz,restauranteActual.ruta)
+    frame_agregar_producto = crear_frame_eliminar_producto(raiz,restauranteActual.ruta,frameRestaurante)
+    frame_agregar_producto.pack(fill="both", expand=True)
+
+def mostrar_frame_ventas_producto():
+    frameRestaurante.pack_forget()
+    frame_agregar_producto = crear_frame_ventas_producto(raiz,restauranteActual.nombre,frameRestaurante)
     frame_agregar_producto.pack(fill="both", expand=True)
 
 # Labels de frame principal
@@ -112,6 +118,21 @@ entryCantidad.pack(fill="x", padx=10, pady=5)
 Label(frameAgregarProducto, text="Precio:", bg="White").pack(anchor="w", padx=10, pady=5)
 entryPrecio = Entry(frameAgregarProducto)
 entryPrecio.pack(fill="x", padx=10, pady=5)
+
+def volver_to_opciones_restaurante():
+    frameAgregarProducto.pack_forget()
+    frameRestaurante.pack(fill="both", expand=True)
+# Botón 'Atrás' usando place()
+boton_atras = tk.Button(frameAgregarProducto, text="Atrás",command=volver_to_opciones_restaurante)
+boton_atras.place(relx=0.95, rely=0.025, anchor="ne")  # Posicionar en la esquina superior derecha
+
+def volver_to_raiz():
+    frameRestaurante.pack_forget()
+    framePrincipal.pack(fill="both", expand=True)
+# Botón 'Atrás' usando place()
+boton_atras = tk.Button(frameRestaurante, text="Atrás",command=volver_to_raiz)
+boton_atras.place(relx=0.95, rely=0.025, anchor="ne")  # Posicionar en la esquina superior derecha
+
 
 # Frame iniciar sesión usuario
 frameIniciarSesionUsuario = Frame(raiz, width="600", height="1200")
@@ -409,7 +430,31 @@ def agregarAlCarrito(valor):
     valor = entryCarrito1.get()
     carrito = Comprador()
     global restauranteActual
-    carrito.agregar_al_carrito(restauranteActual, valor, cantidad) 
+    carrito.agregar_al_carrito(restauranteActual, valor) 
+
+def pagar(self):
+        self.agregar_a_excel(total)
+
+def agregar_a_excel(self, total):
+    # Cargar el archivo de Excel o crear uno nuevo
+    try:
+        wb = openpyxl.load_workbook('Ventas.xlsx')
+        hoja = wb.active
+    except FileNotFoundError:
+        wb = Workbook()
+        hoja = wb.active
+        hoja.append(["Fecha", "Total"])  # Encabezados
+
+    # Agregar la nueva venta
+    from datetime import datetime
+    fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    hoja.append([fecha, total])
+
+    # Guardar el archivo
+    wb.save('Ventas.xlsx')
+
+def __str__(self):
+    return str(self.nombre)
 
 
     
@@ -459,7 +504,7 @@ botonModificar.pack(pady=10, side=TOP)
 botonEliminar = Button(frameRestaurante, text="Eliminar", width=20, height=2, command=lambda:  mostrar_frame_eliminar_producto())
 botonEliminar.pack(pady=10, side=TOP)
 
-botonRevisarProductosVendidos = Button(frameRestaurante, text="Productos Vendidos", width=20, height=2)
+botonRevisarProductosVendidos = Button(frameRestaurante, text="Productos Vendidos", width=20, height=2, command=lambda:  mostrar_frame_ventas_producto())
 botonRevisarProductosVendidos.pack(pady=10, side=TOP)
 
 
@@ -518,7 +563,7 @@ botonAgregarCarrito.pack(padx=40, pady=20)
 botonEliminarCarrito = Button(frameMostrarMenu, text="Eliminar del Carrito")
 botonEliminarCarrito.pack(pady=5)
 
-botonPagar = Button(frameCarritoCompras, text="Pagar")
+botonPagar = Button(frameCarritoCompras, text="Pagar") 
 botonPagar.pack(pady=5)
 
 botonVolver = Button(frameCarritoCompras, text="Volver", command=lambda: regresarEscogerVista())
