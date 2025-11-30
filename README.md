@@ -60,12 +60,3 @@ Después de cada sesión:
 - Productos agotados → no se pueden pedir  
 
 ---
-
-## 🧰 Non-Functional Requirements  
-- ✔ Validación completa de listas enlazadas  
-- ✔ Manejo de errores del usuario  
-- ✔ Interfaz interactiva (GUI o consola)  
-- ✔ Mensajes claros y explicativos  
-- ✔ Al menos **1 TAD** implementado por el desarrollador  
-
----
