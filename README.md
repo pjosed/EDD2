@@ -60,3 +60,15 @@ Después de cada sesión:
 - Productos agotados → no se pueden pedir  
 
 ---
+
+### 4. Screenshots del programa
+
+![Screenshots del programa](https://raw.githubusercontent.com/pjosed/EDD2/main/assets/6RESTAURANTE.jpg)
+![Screenshots del programa](https://raw.githubusercontent.com/pjosed/EDD2/main/assets/5RESTAURANTE.jpg)
+![Screenshots del programa](https://raw.githubusercontent.com/pjosed/EDD2/main/assets/6RESTAURANTE.jpg)
+![Screenshots del programa](https://raw.githubusercontent.com/pjosed/EDD2/main/assets/3RESTAURANTE.jpg)
+![Screenshots del programa](https://raw.githubusercontent.com/pjosed/EDD2/main/assets/2RESTAURANTE.jpg)
+![Screenshots del programa](https://raw.githubusercontent.com/pjosed/EDD2/main/assets/1RESTAURANTE.jpg)
+
+
+
